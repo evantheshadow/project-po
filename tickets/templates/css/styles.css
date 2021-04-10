@@ -1,0 +1,13 @@
+/* Промежуточная версия */
+.hero.is-info {
+    background-color: skyblue;
+    background-size: cover;
+}
+
+.hero.is-fullheight {
+    min-height: 100vh;
+}
+
+.homepage-text {
+    color: whitesmoke;
+}
