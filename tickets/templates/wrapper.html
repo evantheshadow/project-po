@@ -2,7 +2,8 @@
 <html lang="ru">
     <head>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
-        <link rel="stylesheet" href="css/styles.css">
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -10,9 +11,49 @@
     </head>
     <body>
         <section class="hero is-info is-fullheight">
-            {% block content %}
+            <div class="hero-head">
+                    <nav class="navbar">
+                        <div class="container">
+                        <div class="navbar-brand">
+                            <img src="{% static 'images/aviakassa.png' %}" alt="АВИАКАССА" class="homepage-img navbar-item" align="center"><img>
+                            <span class="navbar-burger burger" data-target="navbarMenu">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </span>
+                            <div id="navbarMenu" class="navbar-menu is-active">
+                                <div class="navbar-end">
+                                    <span class="navbar-item">
+                                        <a class="button is-white is-outlined" href="#">
+                                            <span>Домашняя страница</span>
+                                        </a>
+                                    </span>
+                                    <span class="navbar-item">
+                                        <a class="button is-white is-outlined" href="#">
+                                            <span>Билеты</span>
+                                        </a>
+                                    </span>
+                                    <span class="navbar-item">
+                                        <a class="button is-white is-outlined" href="#">
+                                            <span>Документация</span>
+                                        </a>
+                                    </span>
+                                    <span class="navbar-item">
+                                        <a class="button is-white is-outlined" href="https://github.com/BulmaTemplates/bulma-templates/blob/master/templates/landing.html">
+                                            <span>Источник</span>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                {% block content %}
 
-            {% endblock %}
+                {% endblock %}
+            </div>
         </section>
     </body>
 </html>

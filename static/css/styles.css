@@ -1,0 +1,21 @@
+/* Промежуточная версия */
+.hero.is-info {
+    background-image: url("../images/background.png");
+    background-size: cover;
+}
+
+.hero.is-fullheight {
+    min-height: 100vh;
+}
+
+.homepage-text {
+    color: whitesmoke;
+    padding-top: 300px;
+}
+
+.homepage-img.navbar-item {
+    height: 55px;
+    width: 180px;
+    align-self: flex-start;
+    margin-right: 10px;
+}
