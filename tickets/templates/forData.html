@@ -29,13 +29,13 @@
                 {% endfor %}
             </ul> -->
                 <select>
-                    {% for f in fly %}
-                        <option value='{{ f.takeoff_place.air_name }}'>{{ air.air_name }}</option>
+                    {% for air in airports %}
+                        <option value='{{ air.air_name }}'>{{ air.air_name }}</option>
                     {% endfor %}
                 </select>
                 <select>
-                    {% for f in fly %}
-                        <option value='{{ f.arrival_place.air_name }}'>{{ air.air_name }}</option>
+                    {% for air in airports %}
+                        <option value='{{ air.air_name }}'>{{ air.air_name }}</option>
                     {% endfor %}
                 </select>
                 <select>
