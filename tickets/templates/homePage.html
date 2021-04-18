@@ -28,17 +28,24 @@
                 <li>{{ air.name }}</li>
                 {% endfor %}
             </ul> -->
+            <form METHOD='POST'>
                 <select>
-                    {% for f in fly %}
-                        <option value='{{ f.takeoff_place.air_name }}'>{{ air.air_name }}</option>
+                    {% for f in flights %}
+                        <option value='{{ f.takeoff_place }}'>1. {{ f.takeoff_place }}</option>
                     {% endfor %}
                 </select>
                 <select>
-                    {% for f in fly %}
-                        <option value='{{ f.arrival_place.air_name }}'>{{ air.air_name }}</option>
+                    {% for f in flights %}
+                        <option value='{{ f.arrival_place }}'>2. {{ f.arrival_place }}</option>
                     {% endfor %}
                 </select>
                 <select>
+                    {% for f in flights %}
+                        <option value='{{ f.date }}'>2. {{ f.date }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+                <!-- <select>
                     {% for air in airports %}
                         <option value='{{ air.air_name }}'>{{ air.air_name }}</option>
                     {% endfor %}
@@ -47,7 +54,7 @@
                     {% for air in airports %}
                         <option value='{{ air.air_name }}'>{{ air.air_name }}</option>
                     {% endfor %}
-                </select>
+                </select> -->
             </div>
     </div>
 </div>

@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date, datetime
 
 # Create your models here.
 
@@ -46,7 +47,7 @@ class Airport(models.Model):
         # db_table = 'airports_table'
 
     def __str__(self):
-        return air_name
+        return self.air_name
 
 
 class Flight(models.Model):
@@ -63,7 +64,8 @@ class Flight(models.Model):
         null=True
     )
     date = models.DateField(
-        null=False, blank=True, verbose_name='Дата отправления'
+        null=False, blank=True, verbose_name='Дата отправления',
+        default=datetime.now()
     )
 
 
@@ -78,3 +80,5 @@ class Ticket(models.Model):
         default=TICKET_CLASS_CHOICES[0][0], choices=TICKET_CLASS_CHOICES
     )
     cost = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+
+    # def

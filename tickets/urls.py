@@ -1,11 +1,11 @@
 from django.conf.urls import url, include
-from .views import AirportListView
+from .views import *
 
 app_name = "tickets"
 
 urlpatterns = [
     url(
         r'^',
-        AirportListView.as_view(),
+        FlightListView.as_view(),
     ),
 ]
