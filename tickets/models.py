@@ -63,10 +63,15 @@ class Flight(models.Model):
         related_name="place_to",
         null=True
     )
-    date = models.DateField(
-        null=False, blank=True, verbose_name='Дата отправления',
+    takeoff_time = models.DateField(
+        null=False, blank=True, verbose_name='Время отправления',
         default=datetime.now()
     )
+    arrival_time = models.DateField(
+        null=False, blank=True, verbose_name='Время прибытия',
+        default=datetime.now()
+    )
+    seats_number = models.IntegerField()
 
 
 class Ticket(models.Model):
@@ -79,6 +84,38 @@ class Ticket(models.Model):
         max_length=35, verbose_name='Класс билета',
         default=TICKET_CLASS_CHOICES[0][0], choices=TICKET_CLASS_CHOICES
     )
-    cost = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    price = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
 
     # def
+
+
+class Plane(models.Model):
+    name = models.CharField(
+        max_length=35, verbose_name='Имя самолета',
+    )
+    pl_type = models.ForeignKey(
+        PlaneType, verbose_name="Тип самолета",
+        on_delete=models.CASCADE
+    )
+
+class PlaneType(models.Model):
+    name = models.CharField(
+        max_length=35, verbose_name="Название типа"
+    )
+
+
+class AirTeam(models.Model):
+    flight = models.ForeignKey(
+        Flight, verbose_name="Назначенный вылет",
+        on_delete=models.SET_NULL,
+    )
+    worker = models.ForeignKey(
+        Employee, verbose_name="Рабочий",
+        on_delete=models.CASCADE,
+    )
+
+
+class Employee(models.Model):
+    position = models.CharField()
+    last_name = models.CharField()
+    
