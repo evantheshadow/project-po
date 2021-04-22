@@ -35,13 +35,14 @@ class AirportSerializer(serializers.ModelSerializer):
 class FlightSerializer(serializers.ModelSerializer):
     model = Flight 
     fields = ("takeoff", "arrival", "date")
-    widgets = {
-                'birthdate': SelectDateWidget(attrs = {
-                 },years = range(1920, 2017),),
-             }
+#     widgets = {
+#                 'birthdate': SelectDateWidget(attrs = {
+#                  },years = range(1920, 2017),),
+#              }
 
-    takeoff = serializers.CharField()
+    date = serializers.CharField()
     arrival = serializers.CharField()
+    takeoff = serializers.CharField()
 
 
 class AirportListView(APIView):
@@ -61,17 +62,35 @@ class FlightListView(APIView):
     template_name = 'homePage.html'
 
     def get(self, request):
-        response = Flight.objects.all().distinct()
-        for row in response: 
-            row.date = row.date.strftime('%d.%m.%Y')
-            row.takeoff = '{}. {}'.format(row.takeoff_place.id, row.takeoff_place.air_name)
-            row.arrival = '{}. {}'.format(row.arrival_place.id, row.arrival_place.air_name)
+        response = Flight.objects.all()
+        take_set = set()
+        arr_set = set()
+        take_data = []
+        arr_data = []
+        for row in response:
+            if row.takeoff_place.air_name not in take_set:
+                take_data.append({
+                    'id': row.takeoff_place.id,
+                    'name': row.takeoff_place.air_name,
+                    'iata_code': row.takeoff_place.iata_code,
+                })
+                take_set.add(row.takeoff_place.air_name)
+            if row.arrival_place.air_name not in arr_set:
+                arr_data.append({
+                    'id': row.arrival_place.id,
+                    'name': row.arrival_place.air_name,
+                    'iata_code': row.arrival_place.iata_code
+                })
+                arr_set.add(row.arrival_place.air_name)
+            # row. 
+            print(row.takeoff_time)
+            row.date = row.takeoff_time.strftime('%d.%m.%Y')
+            # row.takeoff = row.takeoff_place.air_name
+            # row.arrival = row.arrival_place.air_name
         serializer = FlightSerializer(response, many=True)
-        return Response({'flights': response, 'serializer': serializer})
-
-    # def post(self, request):
-    #     serializer = FlightSerializer(data = request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'flights': response, 
+            'takeoffs': take_data, 
+            'arrivals': arr_data, 
+            'serializer': serializer
+        })

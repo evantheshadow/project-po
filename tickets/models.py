@@ -1,6 +1,6 @@
 from django.db import models
-from datetime import date, datetime
-
+import datetime
+from django.utils import timezone
 # Create your models here.
 
 TICKET_CLASS_CHOICES = (
@@ -63,15 +63,17 @@ class Flight(models.Model):
         related_name="place_to",
         null=True
     )
-    takeoff_time = models.DateField(
+    takeoff_time = models.DateTimeField(
         null=False, blank=True, verbose_name='Время отправления',
-        default=datetime.now()
+        auto_now_add=True
     )
-    arrival_time = models.DateField(
+    arrival_time = models.DateTimeField(
         null=False, blank=True, verbose_name='Время прибытия',
-        default=datetime.now()
+        auto_now_add=True
     )
-    seats_number = models.IntegerField()
+    seats_number = models.IntegerField(
+        default=0,
+    )
 
 
 class Ticket(models.Model):
@@ -89,14 +91,14 @@ class Ticket(models.Model):
     # def
 
 
-class Plane(models.Model):
-    name = models.CharField(
-        max_length=35, verbose_name='Имя самолета',
-    )
-    pl_type = models.ForeignKey(
-        PlaneType, verbose_name="Тип самолета",
-        on_delete=models.CASCADE
-    )
+# class Plane(models.Model):
+#     name = models.CharField(
+#         max_length=35, verbose_name='Имя самолета',
+#     )
+#     pl_type = models.ForeignKey(
+#         PlaneType, verbose_name="Тип самолета",
+#         on_delete=models.CASCADE
+#     )
 
 class PlaneType(models.Model):
     name = models.CharField(
@@ -107,15 +109,18 @@ class PlaneType(models.Model):
 class AirTeam(models.Model):
     flight = models.ForeignKey(
         Flight, verbose_name="Назначенный вылет",
-        on_delete=models.SET_NULL,
-    )
-    worker = models.ForeignKey(
-        Employee, verbose_name="Рабочий",
         on_delete=models.CASCADE,
     )
+    # worker = models.ForeignKey(
+        # Employee, verbose_name="Рабочий",
+        # on_delete=models.CASCADE,
+    # )
 
 
 class Employee(models.Model):
-    position = models.CharField()
-    last_name = models.CharField()
+    last_name = models.CharField(max_length=50, null=True, verbose_name="Фамилия")
+    first_name = models.CharField(max_length=50, null=True, verbose_name="Имя")
+    patro = models.CharField(max_length=50, null=True, verbose_name="Отчество")
+    position = models.CharField(max_length=50, null=True, verbose_name="Должность")
+    xp = models.IntegerField(default=0, verbose_name="Стаж")
     

@@ -1,10 +1,7 @@
 from django import forms
 
-class DateForm(forms.Form):
-    date = forms.DateTimeField(
-        input_formats=['%d/%m/%Y %H:%M'],
-        widget=forms.DateTimeInput(attrs={
-            'class': 'form-control datetimepicker-input',
-            'data-target': '#datetimepicker1'
-        })
-    )
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+class ExampleForm(forms.Form):
+    my_date_field = forms.DateField(widget=DateInput())

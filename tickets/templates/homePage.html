@@ -30,20 +30,19 @@
             </ul> -->
             <form METHOD='POST'>
                 <select>
-                    {% for f in flights %}
-                        <option value='{{ f.takeoff_place }}'>1. {{ f.takeoff_place }}</option>
+                    {% for f in takeoffs %}
+                        <option value="{{ f.name }}">{{ f.name }}</option>
                     {% endfor %}
                 </select>
                 <select>
-                    {% for f in flights %}
-                        <option value='{{ f.arrival_place }}'>2. {{ f.arrival_place }}</option>
+                    {% for f in arrivals %}
+                        <option value="{{ f.name }}">{{ f.name }}</option>
                     {% endfor %}
                 </select>
-                <select>
-                    {% for f in flights %}
-                        <option value='{{ f.date }}'>2. {{ f.date }}</option>
-                    {% endfor %}
-                </select>
+                <div style="text-align: center;">
+                    <input type="date">
+                    {{ example_form.my_date_field }}
+                </div>
             </form>
                 <!-- <select>
                     {% for air in airports %}
