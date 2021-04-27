@@ -1,0 +1,24 @@
+{% extends "wrapper.html" %}
+{% load rest_framework %}
+
+{% block content %}
+<div class="container has-text-centered">
+    {% if flight_list %}
+    <p>Доступные рейсы на данный момент:</p>
+    <ul>
+
+      {% for tk in takeoffs %}
+      <li>
+        <br>
+        <a>{{ tk.city }} ({{ tk.iata }}) - {{ tk.arr_name }} ({{ tk.arr_iata }})</a>
+        <p>Количество доступных мест: {{ tk.snum }}</p>
+        <br>
+      </li>
+      {% endfor %}
+
+    </ul>
+    {% else %}
+      <p>Доступных рейсов на данный момент нет :(</p>
+    {% endif %} 
+</div>
+{% endblock %}

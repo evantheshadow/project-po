@@ -22,27 +22,28 @@
                 </p>
             </div>
         </div>
-            <div class="field is-grouped" align="center">
-            <!-- <ul>
-                {% for air in airports %}
-                <li>{{ air.name }}</li>
-                {% endfor %}
-            </ul> -->
-            <form METHOD='POST'>
-                <select>
-                    {% for f in takeoffs %}
-                        <option value="{{ f.name }}">{{ f.name }}</option>
+        <div class="field is-grouped" align="center">
+            <form METHOD='POST' enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- <select>
+                    {% for ct in cities %}
+                        <option name="arrival_place" value="{{ ct.name }}">{{ ct.name }}</option>
                     {% endfor %}
-                </select>
-                <select>
-                    {% for f in arrivals %}
-                        <option value="{{ f.name }}">{{ f.name }}</option>
+                </select> -->
+                <!-- <label for="takeoff_place">Куда: </label> -->
+                {{ takeoff }}
+                <!-- <select>
+                    {% for ct in example_form.takeoff_place %}
+                    <option name="takeoff_place" value="{{ example_form.takeoff_place }}">{{ example_form.takeoff_place }}</option>
                     {% endfor %}
-                </select>
-                <div style="text-align: center;">
-                    <input type="date">
-                    {{ example_form.my_date_field }}
-                </div>
+                </select> -->
+                <!-- <label for="my_date">Дата билетов: </label>
+                    <input type="date" name="my_date" value="{{ example_form.my_date }}">
+                        {{ example_form.my_date }}
+                    </input>
+                </div> -->
+                <input type="submit" value="OK">
+                <!-- <h2>{{ my_date }}</h2> -->
             </form>
                 <!-- <select>
                     {% for air in airports %}
@@ -54,7 +55,7 @@
                         <option value='{{ air.air_name }}'>{{ air.air_name }}</option>
                     {% endfor %}
                 </select> -->
-            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

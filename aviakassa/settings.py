@@ -34,13 +34,12 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'tickets',
     'rest_framework',
-    "django.contrib.admin.apps.SimpleAdminConfig",
+    'django.contrib.admin.apps.SimpleAdminConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bootstrap_datepicker_plus',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +57,7 @@ ROOT_URLCONF = 'aviakassa.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [str(BASE_DIR.joinpath('tickets/templates'))],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

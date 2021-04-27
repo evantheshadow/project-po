@@ -11,15 +11,18 @@ TICKET_CLASS_CHOICES = (
 
 
 class City(models.Model):
-    
     class Meta:
         verbose_name = 'Город'
         verbose_name_plural = 'Города'
 
     id = models.IntegerField(unique=True, primary_key=True)
     name = models.CharField(
-        max_length=100, verbose_name='Город',
-        unique=True
+        max_length=100, verbose_name='Город', 
+        null=True
+    )
+    en_name = models.CharField(
+        max_length=100, verbose_name='Международное название города',
+        null=True
     )
 
 
@@ -44,13 +47,33 @@ class Airport(models.Model):
 
     class Meta:
         managed = False
-        # db_table = 'airports_table'
 
     def __str__(self):
         return self.air_name
 
 
+class PlaneType(models.Model):
+    name = models.CharField(
+        max_length=35, verbose_name="Название типа"
+    )
+
+
+class Plane(models.Model):
+    name = models.CharField(
+        max_length=35, verbose_name='Имя самолета', null=True,
+    )
+    pl_type = models.ForeignKey(
+        PlaneType, verbose_name="Тип самолета",
+        on_delete=models.CASCADE
+    )
+
+
 class Flight(models.Model):
+    plane = models.ForeignKey(
+      Plane, verbose_name='Самолет',
+      on_delete=models.SET_NULL,
+      null=True
+    )
     takeoff_place = models.ForeignKey(
         Airport, verbose_name='Откуда',
         on_delete=models.SET_NULL,
@@ -88,39 +111,27 @@ class Ticket(models.Model):
     )
     price = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
 
-    # def
 
-
-# class Plane(models.Model):
-#     name = models.CharField(
-#         max_length=35, verbose_name='Имя самолета',
-#     )
-#     pl_type = models.ForeignKey(
-#         PlaneType, verbose_name="Тип самолета",
-#         on_delete=models.CASCADE
-#     )
-
-class PlaneType(models.Model):
+class Position(models.Model):
     name = models.CharField(
-        max_length=35, verbose_name="Название типа"
+        max_length=55, null=True
     )
-
-
-class AirTeam(models.Model):
-    flight = models.ForeignKey(
-        Flight, verbose_name="Назначенный вылет",
-        on_delete=models.CASCADE,
-    )
-    # worker = models.ForeignKey(
-        # Employee, verbose_name="Рабочий",
-        # on_delete=models.CASCADE,
-    # )
 
 
 class Employee(models.Model):
     last_name = models.CharField(max_length=50, null=True, verbose_name="Фамилия")
     first_name = models.CharField(max_length=50, null=True, verbose_name="Имя")
     patro = models.CharField(max_length=50, null=True, verbose_name="Отчество")
-    position = models.CharField(max_length=50, null=True, verbose_name="Должность")
+    position = models.ForeignKey(Position, null=True, verbose_name="Должность", on_delete=models.SET_NULL)
     xp = models.IntegerField(default=0, verbose_name="Стаж")
-    
+
+
+class AirlineTeam(models.Model):
+    flight = models.ForeignKey(
+        Flight, verbose_name="Назначенный вылет",
+        on_delete=models.CASCADE,
+    )
+    worker = models.ForeignKey(
+        Employee, verbose_name="Рабочий",
+        on_delete=models.CASCADE,
+    )
