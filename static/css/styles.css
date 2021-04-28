@@ -14,9 +14,39 @@
 }
 
 .homepage-img.navbar-item {
-    height: 55px;
-    width: 180px;
+    height: 75px;
+    width: 75px;
     align-self: flex-start;
     align-content: flex-start;
     margin-right: 10px;
+}
+
+nav{ 
+    white-space: nowrap; 
+  }
+  
+#navul{ 
+    display: inline-block;
+    *display: inline; /* IE7 */
+    *zoom:1;  /* IE7 */ 
+    list-style: none;
+    width: 100%;
+}
+
+.nav-item{ 
+    display: inline-block;
+    *display: inline;
+    *zoom:1;
+    width: 33%;
+    color: #fff;
+    text-align: center;
+    margin-left: -4px;
+}
+  
+.nav-item:first-child{
+    margin-left: 0;
+}
+  
+.nav-item-active:first-child{
+    margin-left: 0;
 }

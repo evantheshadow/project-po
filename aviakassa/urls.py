@@ -18,7 +18,12 @@ from django.conf.urls import url, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+admin.autodiscover()
+admin.site.site_header = "АДМИНИСТРАТОРСКАЯ СИСТЕМА - АВИАКАССА"
+admin.site.site_title = "UMSRA Admin Portal"
+admin.site.index_title = "Добро пожаловать в систему администратора 'Авиакасса'!"
+
 urlpatterns = [
     url(r"^", include("tickets.urls")),
-    url('admin/', admin.site.urls),
+    url('admin/', admin.site.urls, name='admin'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

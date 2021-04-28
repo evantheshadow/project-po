@@ -1,17 +1,12 @@
-from django import forms
-# from django_select2.forms import Select2MultipleWidget, Select2Widget
+import datetime as dt
+from datetime import datetime
 
-import datetime
+from django import forms
 from .models import *
 
 def get_cities():
     cities = City.objects.all()
     return tuple((city.id, city.name) for city in cities)
-    # city_names = [
-    #     _["name"] for _ in cities.order_by("name").values("name").distinct()
-    # ]
-    # city_names.sort()
-    # return tuple((sup_name, sup_name) for sup_name in supplier_names)
 
 
 class DateInput(forms.DateInput):
@@ -36,13 +31,14 @@ class ExampleForm(forms.Form):
     )
     my_date = forms.DateField(
         label="Дата",
-        required=False,
+        required=True,
         widget=DateInput(), 
     )
 
-    def __init__(self, request):
-        super().__init__(request)
-        print('Request Field: {}'.format(request))
+    def __init__(self, request, *args, **kwargs):
+        super(ExampleForm, self).__init__(request)
+        self.fields['my_date'].required = True
+        self.fields['my_date'].error_messages = {'required': ' '}
         self.fields["takeoff_place"].choices = get_cities()
         self.fields["arrival_place"].choices = get_cities()
 
@@ -69,8 +65,42 @@ class ExampleForm(forms.Form):
         return arrival_place
 
     def clean(self):
+        cleaned_data = super(ExampleForm, self).clean()
+        my_date = str(cleaned_data.get('my_date'))
+        print(my_date)
+        if my_date == None:
+            my_date_time = datetime.datetime.strptime(my_date, '%Y-%m-%d').date()
+            if datetime.datetime.now().date() <= my_date_time:
+                msg = u"Wrong Date Time!"
+                self.add_error('my_date', msg)
+        print(self.cleaned_data)
+        return cleaned_data
+
+class DetailForm(forms.Form):
+    class Meta:
+        fields = {"f_id"}
+
+    f_id = forms.IntegerField(
+        label="ID полета",
+    )
+
+    def __init__(self, request, *args, **kwargs):
+        super(ExampleForm, self).__init__(request)
+
+    def clean(self):
         print(self.cleaned_data)
         return self.cleaned_data
+
+
+    # def clean(self):
+    #     cleaned_data = super(DetailForm, self).clean()
+    #     f_id = cleaned_data.get('f_id'))
+    #     print(my_date)
+    #     if f_id == None:
+    #         msg = u"Wrong Date Time!"
+    #         self.add_error('f_id', msg)
+    #     print(self.cleaned_data)
+    #     return cleaned_data
 
     # def save(self, *args, **kwargs):
     #     city = super().save(*args, **kwargs)

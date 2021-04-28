@@ -4,15 +4,29 @@
 {% block content %}
 <div class="container has-text-centered">
     {% if flight_list %}
-    <p>Доступные рейсы на данный момент:</p>
+    <h1>Доступные рейсы на данный момент:</h1>
     <ul>
 
       {% for tk in takeoffs %}
       <li>
-        <br>
-        <a>{{ tk.city }} ({{ tk.iata }}) - {{ tk.arr_name }} ({{ tk.arr_iata }})</a>
-        <p>Количество доступных мест: {{ tk.snum }}</p>
-        <br>
+        <article class="message is-dark" style="margin-top: 30px; margin-bottom: 30px;">
+          <div class="message-header">
+            <p>{{ tk.city }} ({{ tk.iata }}) - {{ tk.arr_city }} ({{ tk.arr_iata }})</p>
+            <form action="{% url 'tickets:flight_detail' id=tk.id %}" method="post" class="form">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary">{{ tk.name }}</button>
+            </form>
+            <!-- <button href="{% url 'tickets:flight_detail' tk.id %}" class="info" aria-label="info">Oppo</button> -->
+            <!-- <a href="{% url 'tickets:flight_detail' tk.id %}" class="info" aria-label="info"></a> -->
+          </div>
+          <div class="message-body">
+              <div class="columns">
+                <div class="column">Время вылета: {{ tk.tk_time }}</div>
+                <div class="column">Время прилета: {{ tk.arr_time }}</div>
+                <div class="column">Количество свободных мест: {{ tk.snum }}</div>
+              </div>
+          </div>
+        </article>
       </li>
       {% endfor %}
 

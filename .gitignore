@@ -90,6 +90,7 @@ collected_static/
 !logs/.gitkeep
 
 media/
+bower_components/
 src/
 .idea
 .vscode

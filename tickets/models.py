@@ -15,7 +15,6 @@ class City(models.Model):
         verbose_name = 'Город'
         verbose_name_plural = 'Города'
 
-    id = models.IntegerField(unique=True, primary_key=True)
     name = models.CharField(
         max_length=100, verbose_name='Город', 
         null=True
@@ -25,12 +24,15 @@ class City(models.Model):
         null=True
     )
 
+    def __str__(self):
+        return self.name
+
 
 class Airport(models.Model):
-    id = models.IntegerField(
-        unique=True,
-        primary_key=True,
-    )
+    class Meta:
+        verbose_name = 'Аэропорт'
+        verbose_name_plural = 'Аэропорты'
+
     iata_code = models.CharField(
         max_length=3,
         verbose_name='Код аэропорта',
@@ -53,12 +55,23 @@ class Airport(models.Model):
 
 
 class PlaneType(models.Model):
+    class Meta:
+        verbose_name = 'Тип самолета'
+        verbose_name_plural = 'Типы самолетов'
+
     name = models.CharField(
-        max_length=35, verbose_name="Название типа"
+        max_length=35, verbose_name="Название типа самолета"
     )
+
+    def __str__(self):
+        return self.name
 
 
 class Plane(models.Model):
+    class Meta:
+        verbose_name = 'Самолет'
+        verbose_name_plural = 'Самолеты'
+
     name = models.CharField(
         max_length=35, verbose_name='Имя самолета', null=True,
     )
@@ -67,8 +80,15 @@ class Plane(models.Model):
         on_delete=models.CASCADE
     )
 
+    def __str__(self):
+        return self.name
+
 
 class Flight(models.Model):
+    class Meta:
+        verbose_name = 'Рейс'
+        verbose_name_plural = 'Рейсы'
+
     plane = models.ForeignKey(
       Plane, verbose_name='Самолет',
       on_delete=models.SET_NULL,
@@ -87,46 +107,98 @@ class Flight(models.Model):
         null=True
     )
     takeoff_time = models.DateTimeField(
-        null=False, blank=True, verbose_name='Время отправления',
-        auto_now_add=True
+        null=True, verbose_name='Время отправления',
     )
     arrival_time = models.DateTimeField(
-        null=False, blank=True, verbose_name='Время прибытия',
-        auto_now_add=True
+        null=True, verbose_name='Время прибытия',
     )
     seats_number = models.IntegerField(
-        default=0,
+        default=0, verbose_name='Количество билетов',
     )
+
+    def __str__(self):
+        return 'Маршрут: {} ({}) - {} ({}) || {} - {}'.format(
+            self.takeoff_place.city.name, 
+            self.takeoff_place.iata_code, 
+            self.arrival_place.city.name,
+            self.arrival_place.iata_code,
+            self.takeoff_time.strftime('%d.%m.%Y %H:%M'),
+            self.arrival_time.strftime('%d.%m.%Y %H:%M'),
+        )
+
+    def get_absolute_url(self):
+        return reverse('flight_detail', kwargs={'id': self.post.id})    
 
 
 class Ticket(models.Model):
+    class Meta:
+        verbose_name = 'Билет'
+        verbose_name_plural = 'Билеты'
+
     flight = models.ForeignKey(
         Flight, verbose_name="Номер рейса",
         on_delete=models.CASCADE,
     )
-    is_bought = models.BooleanField()
+    is_bought = models.BooleanField(
+        verbose_name='Куплен ли билет',
+    )
+    tickets_num = models.IntegerField(
+        verbose_name='Количество билетов',
+        default=0,
+    )
     t_class = models.CharField(
         max_length=35, verbose_name='Класс билета',
-        default=TICKET_CLASS_CHOICES[0][0], choices=TICKET_CLASS_CHOICES
+        default=TICKET_CLASS_CHOICES[0][1], choices=TICKET_CLASS_CHOICES
     )
-    price = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    price = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+
+    def __str__(self):
+        return '{}: {} || ({} ({}) - {} ({}))'.format(
+            self.t_class,
+            self.price,
+            self.flight.takeoff_place.city.name, 
+            self.flight.takeoff_place.iata_code, 
+            self.flight.arrival_place.city.name,
+            self.flight.arrival_place.iata_code
+        )
 
 
 class Position(models.Model):
+    class Meta:
+        verbose_name = 'Должность'
+        verbose_name_plural = 'Должности'
+
     name = models.CharField(
-        max_length=55, null=True
+        max_length=55, null=True,
+        verbose_name='Название должности'
     )
+
+    def __str__(self):
+        return self.name
 
 
 class Employee(models.Model):
+    class Meta:
+        verbose_name = 'Сотрудник'
+        verbose_name_plural = 'Сотрудники'
+
     last_name = models.CharField(max_length=50, null=True, verbose_name="Фамилия")
     first_name = models.CharField(max_length=50, null=True, verbose_name="Имя")
-    patro = models.CharField(max_length=50, null=True, verbose_name="Отчество")
+    patro = models.CharField(max_length=50, null=True, blank=True, verbose_name="Отчество")
     position = models.ForeignKey(Position, null=True, verbose_name="Должность", on_delete=models.SET_NULL)
     xp = models.IntegerField(default=0, verbose_name="Стаж")
 
+    def __str__(self):
+        if self.patro == None:
+            self.patro = ' '
+        return '{} {} {} - {} (Стаж: {} лет)'.format(self.last_name, self.first_name, self.patro, self.position, self.xp)
+
 
 class AirlineTeam(models.Model):
+    class Meta:
+        verbose_name = 'Экипаж'
+        verbose_name_plural = 'Экипажи'
+
     flight = models.ForeignKey(
         Flight, verbose_name="Назначенный вылет",
         on_delete=models.CASCADE,
@@ -135,3 +207,17 @@ class AirlineTeam(models.Model):
         Employee, verbose_name="Рабочий",
         on_delete=models.CASCADE,
     )
+
+    def __str__(self):
+        if self.worker.patro == None:
+            self.worker.patro = ' '
+        return '{}: {} {} {} ({} ({}) - {} ({}))'.format(
+            self.worker.position,
+            self.worker.last_name,
+            self.worker.first_name,
+            self.worker.patro,
+            self.flight.takeoff_place.city.name, 
+            self.flight.takeoff_place.iata_code, 
+            self.flight.arrival_place.city.name,
+            self.flight.arrival_place.iata_code
+        )
