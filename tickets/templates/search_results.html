@@ -7,24 +7,48 @@
     <h1>Доступные рейсы на данный момент:</h1>
     <ul>
 
-      {% for tk in takeoffs %}
+      {% for tk in fapi_list %}
       <li>
-        <article class="message is-dark" style="margin-top: 30px; margin-bottom: 30px;">
+        <article class="message is-info" style="margin-top: 30px; margin-bottom: 30px;">
           <div class="message-header">
             <p>{{ tk.city }} ({{ tk.iata }}) - {{ tk.arr_city }} ({{ tk.arr_iata }})</p>
-            <form action="{% url 'tickets:flight_detail' id=tk.id %}" method="post" class="form">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-primary">{{ tk.name }}</button>
-            </form>
-            <!-- <button href="{% url 'tickets:flight_detail' tk.id %}" class="info" aria-label="info">Oppo</button> -->
-            <!-- <a href="{% url 'tickets:flight_detail' tk.id %}" class="info" aria-label="info"></a> -->
           </div>
           <div class="message-body">
+            <div class="container">
               <div class="columns">
-                <div class="column">Время вылета: {{ tk.tk_time }}</div>
-                <div class="column">Время прилета: {{ tk.arr_time }}</div>
-                <div class="column">Количество свободных мест: {{ tk.snum }}</div>
+                <div class="column"><p>Время вылета:</p><p>{{ tk.tk_time }}</p></div>
+                <div class="column"><p>Время прилета:</p><p>{{ tk.arr_time }}</div>
+                <div class="column"><p>Количество свободных мест:</p><p>{{ tk.snum }}</div>
+                <div class="column"><p>Самолет:</p><p>{{ tk.plane }}</div>
               </div>
+              <hr></hr>
+              <div class="columns">
+                <div class="column">
+                <div class="container">
+                {% if tk.a_team %}
+                <p align="left" class="is-info">Работают:</p></p>
+                {% for emps in tk.a_team %}
+                  <p align="left" class="is-info">{{ emps }}</p>
+                {% endfor %}
+                {% else %}
+                  <p align="left" class="is-info">На данный рейс не назначен экипаж.</p>
+                {% endif %}
+                </div>
+                </div>
+                <div class="column">
+                  <div class="container">
+                  {% if tk.ticket %}
+                  <p class="is-info" align="right">Доступные билеты в продаже:</p></p>
+                  {% for ts in tk.ticket %}
+                    <p class="is-info" align="right">{{ ts }}</p>
+                  {% endfor %}
+                  {% else %}
+                    <p class="is-info" align="right">Билеты недоступны.</p>
+                  {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </article>
       </li>
@@ -32,7 +56,8 @@
 
     </ul>
     {% else %}
-      <p>Доступных рейсов на данный момент нет :(</p>
+      <p class="is-info">Доступных рейсов на данный момент нет :(</p>
+      <a class="btn btn-primary" href="{% url 'tickets:home' %}">Назад</a>
     {% endif %} 
 </div>
 {% endblock %}

@@ -1,0 +1,28 @@
+{% extends "wrapper.html" %}
+{% load rest_framework %}
+{% load static %}
+
+{% block content %}
+<div class="container has-text-centered">
+    {% if error %}
+        <img src="{% static 'images/error.png' %}">
+        <h2>ОШИБКА!</h2>
+        <p>{{ error }}</p>
+    {% else %}
+        <img src="{% static 'images/success.png' %}">
+        <h2>Ошибки нет.</h2>
+        <p>Попробуйте вернуться назад, пожалуйста.</p>
+    {% endif %}
+    <a class="btn btn-primary" href="{% url 'tickets:home' %}">Назад</a>
+    <!-- <h1>Спасибо!</h1>
+    <p>Сайт был создан на языке Python при помощи фреймворка Django<br> с использованием таких CSS- и JS-фреймворков для шаблонов, как:</p>
+    <ul>
+        <li>Ajax (JS)</li>
+        <li>Bulma (CSS)</li>
+        <li>Bootstrap 4 (CSS)</li>
+        <li>JQuery (JS)</li>
+    </ul>
+
+    <p>©2021 Shadow Industries, Inc.</p> -->
+</div>
+{% endblock %}

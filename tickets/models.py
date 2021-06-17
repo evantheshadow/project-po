@@ -1,12 +1,13 @@
 from django.db import models
 import datetime
 from django.utils import timezone
+from .functions import *
 # Create your models here.
 
 TICKET_CLASS_CHOICES = (
-    ('A', 'Первый класс'),
-    ('C', 'Бизнес-класс'),
-    ('X', 'Эконом')
+    ('Первый класс', 'Первый класс'),
+    ('Бизнес-класс', 'Бизнес-класс'),
+    ('Эконом', 'Эконом')
 )
 
 
@@ -125,10 +126,7 @@ class Flight(models.Model):
             self.takeoff_time.strftime('%d.%m.%Y %H:%M'),
             self.arrival_time.strftime('%d.%m.%Y %H:%M'),
         )
-
-    def get_absolute_url(self):
-        return reverse('flight_detail', kwargs={'id': self.post.id})    
-
+        
 
 class Ticket(models.Model):
     class Meta:
@@ -153,9 +151,9 @@ class Ticket(models.Model):
     price = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
-        return '{}: {} || ({} ({}) - {} ({}))'.format(
+        return '{}: {} || Рейс: ({} ({}) - {} ({}))'.format(
             self.t_class,
-            self.price,
+            how_price_is_it(self.price),
             self.flight.takeoff_place.city.name, 
             self.flight.takeoff_place.iata_code, 
             self.flight.arrival_place.city.name,
@@ -182,16 +180,19 @@ class Employee(models.Model):
         verbose_name = 'Сотрудник'
         verbose_name_plural = 'Сотрудники'
 
-    last_name = models.CharField(max_length=50, null=True, verbose_name="Фамилия")
-    first_name = models.CharField(max_length=50, null=True, verbose_name="Имя")
+    last_name = models.CharField(max_length=50, null=False, default='Петров', verbose_name="Фамилия")
+    first_name = models.CharField(max_length=50, null=False, default='Григорий', verbose_name="Имя")
     patro = models.CharField(max_length=50, null=True, blank=True, verbose_name="Отчество")
     position = models.ForeignKey(Position, null=True, verbose_name="Должность", on_delete=models.SET_NULL)
-    xp = models.IntegerField(default=0, verbose_name="Стаж")
+    xp = models.IntegerField(default=0, null=False, verbose_name="Стаж")
 
-    def __str__(self):
+    def __init__(self, *args, **kwargs):
+        super(Employee, self).__init__(*args, **kwargs)
         if self.patro == None:
             self.patro = ' '
-        return '{} {} {} - {} (Стаж: {} лет)'.format(self.last_name, self.first_name, self.patro, self.position, self.xp)
+
+    def __str__(self):
+        return '{} {} {} - {} (Стаж: {} {})'.format(self.last_name, self.first_name, self.patro, self.position, self.xp, xp_years(self.xp))
 
 
 class AirlineTeam(models.Model):

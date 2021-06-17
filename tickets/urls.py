@@ -17,10 +17,15 @@ urlpatterns = [
         name='flights',
     ),
     url(
-        r'^flights/(?P<id>\d+)/$', 
-        DetailFlightView.as_view(model=Flight), 
-        name='flight_detail',
+        r'^fl_error/$',
+        ErrorView.as_view(),
+        name='fl_error'
     ),
+    # url(
+    #     r'^flights/(?P<id>\d+)/$', 
+    #     DetailFlightView.as_view(model=Flight), 
+    #     name='flight_detail',
+    # ),
     url(
         r'^about/',
         AboutUsView.as_view(),

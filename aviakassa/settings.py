@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'tickets',
     'django_extensions',
     'rest_framework',
+    'django_select2',
+    'widget_tweaks',
     'django.contrib.admin.apps.SimpleAdminConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
